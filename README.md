@@ -1,58 +1,33 @@
+
 # README
 
 ## Translation API Service
 
 This project is a simple translation API service built using Node.js, Express, and the Bottleneck library to control the concurrency of requests. The service translates a list of words from English to a specified target language using an external translation API (e.g., LibreTranslate). The server limits the number of concurrent translation requests to 15 to prevent overload.
 
-### Features
+### Getting Started Guide
 
-- **Concurrency Control**: Limits the number of simultaneous translation requests to 15 using the Bottleneck library.
-- **Queue Management**: Handles up to number of words- 15 queued requests when the server is busy, rejecting any additional requests.
-- **Translation**: Integrates with LibreTranslate to translate words from English to a specified target language.
-- **Error Handling**: Properly handles errors, including rejecting requests when the server is too busy.
+To get started with the translation API service, follow these steps:
 
-### Prerequisites
+1. **Clone the Repository**: 
+  ```
+  git clone https://github.com/yourusername/translation-api-service.git
+  cd translation-api-service
+  ```
 
-- **Node.js**: Ensure you have Node.js installed (version 16.x or higher).
-- **LibreTranslate**: The translation service should be running on `http://localhost:5001/translate`.
+2. **Install Dependencies**: 
+  ```
+  npm install
+  ```
 
-### Installation
+3. **Configure the Server**: 
+  Update the `src/index.ts` file to modify the server configuration if needed. You can change the port and the URL of the translation service (LibreTranslate).
 
-1. **Clone the Repository**
-
-    ```bash
-    git clone https://github.com/yourusername/translation-api-service.git
-    cd translation-api-service
-    ```
-
-2. **Install Dependencies**
-
-    Install the required npm packages:
-
-    ```bash
-    npm install
-    ```
-
-3. **Configuration**
-
-    The server is configured to run on port 5002 by default.
-    The translation service (LibreTranslate) should be running on http://localhost:5001/translate.
-    You can modify the configuration by editing the following lines in src/index.ts:
-
-    ```typescript
-    const PORT = process.env.PORT || 5002;
-    const LIBRETRANSLATE_URL = 'http://localhost:5001/translate';
-    ```
-
-4. **Running the Server**
-
-    To start the server, run:
-
-    ```bash
-    npm run server
-    ```
-
-    The server will start and listen on the specified port (default: 5002).
+4. **Run the Server**: 
+  Start the server using the following command:
+  ```
+  npm run server
+  ```
 
 ### Endpoints
 
@@ -111,26 +86,36 @@ If more than 15 concurrent requests are made, or the queue exceeds the limit, th
 }
 ```
 
-**Testing Concurrency with Autocannon**
+### Libraries Used and Why
 
-To test the server's ability to handle concurrent requests, you can use autocannon, a benchmarking tool.
+The translation API service utilizes the following libraries:
 
-Install Autocannon (if not already installed):
+- **Express**: Express is chosen for its simplicity and flexibility in creating API endpoints.
+- **Bottleneck**: Bottleneck is used to manage and limit the number of concurrent requests, preventing server overload and ensuring smooth operation.
+- **Axios**: Axios is selected for making HTTP requests to the external translation API. It provides built-in support for timeouts and retries.
+- **spellchecker** and **isWord**: These libraries are used for input validation to ensure that the words are correctly spelled and valid in English.
 
-```bash
-npm install -g autocannon
-```
+### Translation API Used and Why
 
-Run a Concurrency Test:
+The translation API service uses LibreTranslate as the translation service. LibreTranslate is chosen because it is an open-source translation API that can be run locally. It provides a free and accessible option for translation tasks.
 
-This command simulates 10 concurrent requests for 10 seconds:
+### Assumptions and Shortcuts
 
-```bash
-npx autocannon -c 15 -d 10 -m POST -H "Content-Type: application/json" -b '{"words":["hello","world"],"targetLanguage":"es"}' http://localhost:5002/translate
-```
+- **Assumption**: The input words are primarily in English and need to be translated into a target language.
+- **Shortcut**: The project currently handles only basic input validation and assumes that the external API will be available and responsive.
 
-Expected Behavior:
+### Challenges and Solutions
 
-- The server will process up to 15 requests simultaneously.
-- Any additional requests will be queued up to number of words array length - 15.
-- If the queue is full, the server will reject requests with a 429 Too Many Requests error.
+- **Challenge**: Managing the concurrency of requests to prevent overloading the external API.
+- **Solution**: Bottleneck is implemented to control the number of simultaneous requests and queue additional requests.
+
+### Extra Features
+
+- **Dynamic Queue Management**: The queue size dynamically adjusts based on the number of words, ensuring that the server can handle requests more efficiently.
+
+### Future Improvements
+
+- **Advanced Error Handling**: Implement more granular error handling to deal with different types of API failures.
+- **Support for Multiple Translation APIs**: Add support for fallback translation services in case the primary API is unavailable.
+- **Scalability**: Consider adding load balancing and caching mechanisms to further improve performance under high load.
+
