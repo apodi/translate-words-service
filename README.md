@@ -11,8 +11,8 @@ To get started with the translation API service, follow these steps:
 
 1. **Clone the Repository**: 
   ```
-  git clone https://github.com/yourusername/translation-api-service.git
-  cd translation-api-service
+  git clone https://github.com/apodi/translate-words-service.git
+  cd translate-words-service
   ```
 
 2. **Install Dependencies**: 
